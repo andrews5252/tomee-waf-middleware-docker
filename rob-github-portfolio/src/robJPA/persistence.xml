@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://w3.org"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://sun.com">
+
+    <persistence-unit name="rob-unit" transaction-type="JTA">
+        <jta-data-source>RobDS</jta-data-source>
+        <class>hu.rob.jpa.SzerverNaplo</class>
+
+        <properties>
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
+            <property name="openjpa.Log" value="SQL=TRACE" />
+        </properties>
+    </persistence-unit>
+</persistence>

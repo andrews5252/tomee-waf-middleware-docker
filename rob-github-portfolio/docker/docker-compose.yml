@@ -1,0 +1,35 @@
+﻿services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: rob-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: change
+      MYSQL_DATABASE: robdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pchange"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  tomee-server:
+    image: tomee:8-jre8-plus
+    container_name: rob-tomee
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+      - "61616:61616"
+    volumes:
+      - ./tomee.xml:/usr/local/tomee/conf/tomee.xml
+      - ./system.properties:/usr/local/tomee/conf/system.properties
+      - ./mysql-connector-java-5.1.13-bin.jar:/usr/local/tomee/lib/mysql-connector-java-5.1.13-bin.jar
+      - ./robJPA.jar:/usr/local/tomee/webapps/robJPA.jar
+      - ./robWAF.war:/usr/local/tomee/webapps/robWAF.war
+
+volumes:
+  mysql_data:
